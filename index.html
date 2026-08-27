@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <title>AHMED BIN RASHED</title>
+  <meta name="description" content="أحمد بن راشد — مصور سينمائي.">
+  <meta name="theme-color" content="#03101F">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AHMED BIN RASHED">
+  <meta property="og:image" content="assets/img/hero-sm.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/img/logo-web.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans+Arabic:wght@200;300;600&display=swap" rel="stylesheet">
+
+  <link rel="preload" as="image" href="assets/img/hero.jpg"
+        imagesrcset="assets/img/hero-sm.jpg 1400w, assets/img/hero.jpg 2400w" imagesizes="100vw">
+  <script>document.documentElement.className+=" js";</script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body class="is-loading">
+
+  <!-- بوابة الدخول: شريحتان تفتحان عند تحميل الموقع -->
+  <div class="gate" aria-hidden="true">
+    <span class="gate__panel gate__panel--top"></span>
+    <span class="gate__panel gate__panel--bottom"></span>
+  </div>
+
+  <!-- طبقات التدريج اللوني — خلفية ثابتة تمشي مع كل الموقع -->
+  <div class="grade" aria-hidden="true">
+    <span class="grade__core"></span>
+    <span class="grade__bloom"></span>
+    <span class="grade__vignette"></span>
+    <span class="grade__grain"></span>
+  </div>
+
+  <main>
+
+    <section class="hero" aria-label="AHMED BIN RASHED">
+      <!-- الصورة بخلفيتها السوداء + دمج screen: الأسود يذوب في التدريج -->
+      <div class="hero__figure">
+        <img
+          src="assets/img/hero.jpg"
+          srcset="assets/img/hero-sm.jpg 1400w, assets/img/hero.jpg 2400w"
+          sizes="100vw"
+          alt="أحمد بن راشد"
+          width="2400" height="1350"
+          fetchpriority="high" decoding="async">
+      </div>
+
+      <div class="hero__inner">
+        <!-- اللوجو ورا الاسم: شفاف من تحت ويوضح لفوق -->
+        <img class="hero__mark" src="assets/img/logo-web.png" alt="" aria-hidden="true"
+             width="1200" height="769" data-intro="1">
+
+        <h1 class="hero__name" data-intro="2">AHMED BIN RASHED</h1>
+        <p class="hero__role" data-intro="3">CINEMATOGRAPHER</p>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ نبذة عني ═══════════════ -->
+    <section class="sec about" id="about" aria-label="نبذة عني">
+      <div class="shell about__grid">
+
+        <!-- الصورة على اليمين -->
+        <div class="about__figure">
+          <img src="assets/media/about/portrait.jpg"
+               srcset="assets/media/about/portrait-sm.jpg 520w, assets/media/about/portrait.jpg 900w"
+               sizes="(max-width:820px) 78vw, 34vw"
+               alt="أحمد بن راشد" width="900" height="1200"
+               loading="lazy" decoding="async">
+        </div>
+
+        <!-- النص على اليسار -->
+        <div class="about__text">
+          <p class="sec__label" data-reveal="up">ABOUT</p>
+          <h2 class="about__title" data-reveal="up" style="--d:.08s">نبذة عني</h2>
+
+          <p class="about__ar" data-reveal="up" style="--d:.14s">
+            أنا أحمد بن راشد، مصور ومهتم بصناعة المحتوى البصري، أعمل في التصوير الفوتوغرافي
+            والسينمائي وإنتاج الفيديو. أحب أن أخلق صورة تحمل إحساسًا وقصة، وأهتم بالتفاصيل
+            من لحظة التصوير وحتى المونتاج والتلوين النهائي.
+          </p>
+
+          <span class="about__rule" data-reveal="rule" style="--d:.26s"></span>
+
+          <h3 class="about__sub" data-reveal="up" style="--d:.3s">رؤيتي</h3>
+          <p class="about__ar" data-reveal="up" style="--d:.34s">
+            أؤمن أن لكل لحظة تفاصيلها الخاصة، وأن أجمل الأشياء ليست دائمًا الأكثر وضوحًا،
+            بل تلك التي نشعر بها قبل أن نلاحظها. لذلك لا أتعامل مع الصورة كإطارٍ يجمع
+            العناصر فقط، بل كمساحة أبحث فيها عن الإحساس، والمعنى، والقصة.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════ الأعمال — شريط بنرات متحرك ═══════════════ -->
+    <section class="sec" id="works" aria-label="الأعمال">
+      <div class="shell">
+        <header class="sec__head">
+          <p class="sec__label" data-reveal="up">WORK</p>
+          <h2 class="sec__title" data-reveal="up" style="--d:.1s">الأعمال</h2>
+        </header>
+      </div>
+
+      <!-- الكاروسيل المتداخل -->
+      <div class="stage" id="stage" data-reveal="up" style="--d:.2s">
+        <button class="nav-arrow nav-arrow--left" id="prevBtn" aria-label="تحريك لليسار">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="nav-arrow nav-arrow--right" id="nextBtn" aria-label="تحريك لليمين">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="shell">
+        <p class="stage__caption">
+          <b class="stage__title"></b>
+          <span class="stage__kind"></span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════ لقطات ═══════════════ -->
+    <section class="sec" id="stills" aria-label="لقطات">
+      <div class="shell">
+        <header class="sec__head">
+          <p class="sec__label" data-reveal="up">STILLS</p>
+          <h2 class="sec__title" data-reveal="up" style="--d:.1s">لقطات</h2>
+        </header>
+
+      </div>
+
+      <div class="rail" data-reveal="up" style="--d:.2s">
+        <button class="rail__btn rail__btn--prev" type="button" aria-label="السابق"></button>
+        <button class="rail__btn rail__btn--next" type="button" aria-label="التالي"></button>
+        <div class="strip strip--shots" data-dir="-1">
+          <button class="shot" type="button" data-full="assets/media/stills/still-01.jpg" style="--ar:900/1600"><img src="assets/media/stills/still-01-sm.jpg" alt="" width="900" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-02.jpg" style="--ar:900/1600"><img src="assets/media/stills/still-02-sm.jpg" alt="" width="900" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-03.jpg" style="--ar:1067/1600"><img src="assets/media/stills/still-03-sm.jpg" alt="" width="1067" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-04.jpg" style="--ar:900/1600"><img src="assets/media/stills/still-04-sm.jpg" alt="" width="900" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-05.jpg" style="--ar:1600/800"><img src="assets/media/stills/still-05-sm.jpg" alt="" width="1600" height="800" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-06.jpg" style="--ar:901/1600"><img src="assets/media/stills/still-06-sm.jpg" alt="" width="901" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-07.jpg" style="--ar:1600/901"><img src="assets/media/stills/still-07-sm.jpg" alt="" width="1600" height="901" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-08.jpg" style="--ar:1600/901"><img src="assets/media/stills/still-08-sm.jpg" alt="" width="1600" height="901" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-09.jpg" style="--ar:1600/900"><img src="assets/media/stills/still-09-sm.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-10.jpg" style="--ar:1600/900"><img src="assets/media/stills/still-10-sm.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-11.jpg" style="--ar:1600/615"><img src="assets/media/stills/still-11-sm.jpg" alt="" width="1600" height="615" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-12.jpg" style="--ar:1600/900"><img src="assets/media/stills/still-12-sm.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-13.jpg" style="--ar:1600/900"><img src="assets/media/stills/still-13-sm.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-14.jpg" style="--ar:899/1600"><img src="assets/media/stills/still-14-sm.jpg" alt="" width="899" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-15.jpg" style="--ar:899/1600"><img src="assets/media/stills/still-15-sm.jpg" alt="" width="899" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-16.jpg" style="--ar:1600/900"><img src="assets/media/stills/still-16-sm.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-17.jpg" style="--ar:899/1600"><img src="assets/media/stills/still-17-sm.jpg" alt="" width="899" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-18.jpg" style="--ar:900/1600"><img src="assets/media/stills/still-18-sm.jpg" alt="" width="900" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-19.jpg" style="--ar:899/1600"><img src="assets/media/stills/still-19-sm.jpg" alt="" width="899" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-20.jpg" style="--ar:1600/900"><img src="assets/media/stills/still-20-sm.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-21.jpg" style="--ar:1600/900"><img src="assets/media/stills/still-21-sm.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-22.jpg" style="--ar:1067/1600"><img src="assets/media/stills/still-22-sm.jpg" alt="" width="1067" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-23.jpg" style="--ar:1600/900"><img src="assets/media/stills/still-23-sm.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-24.jpg" style="--ar:900/1600"><img src="assets/media/stills/still-24-sm.jpg" alt="" width="900" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-25.jpg" style="--ar:900/1600"><img src="assets/media/stills/still-25-sm.jpg" alt="" width="900" height="1600" loading="lazy" decoding="async"></button>
+          <button class="shot" type="button" data-full="assets/media/stills/still-26.jpg" style="--ar:900/1600"><img src="assets/media/stills/still-26-sm.jpg" alt="" width="900" height="1600" loading="lazy" decoding="async"></button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="end">
+    <img class="end__mark" src="assets/img/logo-web.png" alt="أحمد بن راشد"
+         width="1200" height="769" loading="lazy" data-reveal="up">
+    <p class="end__role" data-reveal="up" style="--d:.12s">صانع قصص بصرية</p>
+    <p class="end__meta" data-reveal="up" style="--d:.2s">
+      مصور سينمائي <i>·</i> مونتير <i>·</i> مدير إبداعي
+    </p>
+  </footer>
+
+  <div class="lb" id="lb" hidden>
+    <button class="lb__close" type="button" aria-label="إغلاق"></button>
+    <button class="lb__nav lb__nav--prev" type="button" aria-label="السابق"></button>
+    <button class="lb__nav lb__nav--next" type="button" aria-label="التالي"></button>
+    <div class="lb__stage" id="lbStage"></div>
+  </div>
+
+  <script src="assets/main.js"></script>
+  <script src="assets/works.js"></script>
+</body>
+</html>

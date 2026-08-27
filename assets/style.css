@@ -1,0 +1,713 @@
+/* ══════════════════════════════════════════════════════════════
+   AHMED BIN RASHED
+   1) نظام الألوان   2) بوابة الدخول   3) الصفحة الأولى
+   ══════════════════════════════════════════════════════════════ */
+
+/* ═══════════ 1) نظام الألوان — التدريج الأزرق ═══════════
+   المركز: أزرق داكن  |  الحواف: أغمق درجة  |  حافة الضوء: للأبيض
+   كل الموقع يقرأ من هذي المتغيرات، فتغيير درجة واحدة يغيّر الموقع كله. */
+:root{
+  --navy-950:#01050B;   /* أغمق نقطة في الحواف */
+  --navy-900:#03101F;
+  --navy-800:#062038;
+  --navy-700:#0A2E52;   /* الأزرق الداكن في نص الصفحة */
+  --blue-400:#2E7FB8;
+
+  --ice-200:#BBD4EA;
+  --ice-100:#E4EEF8;
+  --white:#FFFFFF;
+
+  --bg:var(--navy-900);
+  --text:var(--ice-100);
+  --text-dim:rgba(228,238,248,.55);
+
+  --f-ar:"IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-en:"Cormorant Garamond",Georgia,serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-gate:cubic-bezier(.76,0,.24,1);
+  --pad:clamp(18px,4vw,54px);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100svh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-ar);
+  font-weight:300;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ═══════════ التدريج ═══════════ */
+.grade{position:fixed;inset:0;z-index:0;pointer-events:none}
+.grade>span{position:absolute;inset:0;display:block}
+
+.grade__core{
+  background:
+    radial-gradient(120% 95% at 50% 44%,
+      var(--navy-700) 0%,
+      var(--navy-800) 34%,
+      var(--navy-900) 62%,
+      var(--navy-950) 100%);
+}
+
+/* ضوء يطلع من الحافة العلوية لدرجة الأبيض */
+.grade__bloom{
+  background:
+    radial-gradient(56% 40% at calc(50% + var(--mx,0px)) calc(-8% + var(--my,0px)),
+      rgba(255,255,255,.44) 0%,
+      rgba(196,222,244,.22) 28%,
+      rgba(46,127,184,.11) 54%,
+      transparent 76%);
+  transition:opacity 2s var(--ease),transform 2.6s var(--ease);
+}
+body.is-loading .grade__bloom{opacity:0;transform:scale(.88)}
+
+.grade__vignette{
+  background:
+    radial-gradient(105% 78% at 50% 50%,transparent 44%,rgba(1,5,11,.6) 100%),
+    linear-gradient(to top,rgba(1,5,11,.6) 0%,transparent 40%);
+}
+
+.grade__grain{
+  opacity:.045;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 5s steps(5) infinite;
+}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}
+  20%{transform:translate(-3%,2%)}
+  40%{transform:translate(2%,-3%)}
+  60%{transform:translate(-2%,-2%)}
+  80%{transform:translate(3%,1%)}
+}
+
+/* ═══════════ 2) بوابة الدخول السينمائية ═══════════
+   القاعدة في كل الحركات: الوضع الأساسي = الشكل النهائي،
+   و body.is-loading هو اللي يحمل وضع البداية. كذا لو تعطّل
+   الجافاسكربت لأي سبب، الموقع يبان صح مو أسود ولا فاضي. */
+.gate{position:fixed;inset:0;z-index:90;pointer-events:none}
+.gate__panel{
+  position:absolute;left:0;right:0;height:50.2%;
+  background:var(--navy-950);
+  transition:transform 1.15s var(--ease-gate);
+}
+.gate__panel--top{top:0;transform:translateY(-100%)}
+.gate__panel--bottom{bottom:0;transform:translateY(100%)}
+body.is-loading .gate__panel--top,
+body.is-loading .gate__panel--bottom{transform:none}
+
+/* ═══════════ 3) الصفحة الأولى ═══════════ */
+/* ملاحظة مهمة: بدون z-index هنا — عشان دمج screen في الصورة
+   يشوف التدريج اللي تحته ويندمج معه. */
+.hero{
+  position:relative;
+  height:100svh;
+  min-height:520px;
+  display:grid;
+  place-content:center;
+  padding:var(--pad);
+  text-align:center;
+  overflow:hidden;
+}
+
+/* الصورة: بعرض الشاشة كامل وبنسبتها الأصلية، ملزوقة بالأسفل.
+   دمج screen يخلي الأسود شفاف، فتصير الصورة والتدريج شي واحد
+   بدون أي حد أو قص ظاهر. */
+/* بدون z-index / transform / clip-path على هذي الطبقة:
+   أي واحد منهم يعزل الدمج ويرجع الأسود أسود. */
+.hero__figure{
+  position:absolute;inset:auto 0 0 0;
+  height:min(56.25vw,100svh);
+  pointer-events:none;
+}
+
+.hero__figure img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center bottom;
+  mix-blend-mode:screen;
+  filter:grayscale(1) contrast(1.06) brightness(.96);
+  /* الجسم يتلاشى من تحت للشفافية — يذوب في نفس الخلفية،
+     فما يبان قطع ولا خط فاصل بين الصفحة والقسم اللي بعدها */
+  -webkit-mask-image:linear-gradient(to top,
+    transparent 0%,rgba(0,0,0,.16) 7%,rgba(0,0,0,.55) 16%,rgba(0,0,0,.88) 24%,#000 32%);
+  mask-image:linear-gradient(to top,
+    transparent 0%,rgba(0,0,0,.16) 7%,rgba(0,0,0,.55) 16%,rgba(0,0,0,.88) 24%,#000 32%);
+  /* الظهور: الشفافية على الصورة نفسها — تندمج مع التدريج وهي تظهر */
+  transition:opacity 2.2s var(--ease) .45s;
+}
+body.is-loading .hero__figure img{opacity:0}
+
+/* شاشات عريضة جدًا: نعرض الكادر كامل بدل ما ينقص للصدر */
+@media (min-aspect-ratio:2/1){
+  .hero__figure img{object-fit:contain}
+}
+
+/* ── اللوجو خلف الاسم ── */
+.hero__inner{position:relative;z-index:12}
+
+.hero__mark{
+  position:absolute;
+  left:50%;top:50%;
+  translate:-50% -46%;
+  width:clamp(240px,34vw,560px);
+  height:auto;
+  /* شفاف من تحت، ويوضح كل ما طلع لفوق.
+     درجة الوضوح كلها في القناع نفسه (مو في opacity) عشان
+     حركة الظهور تشتغل بدون تعارض. */
+  -webkit-mask-image:linear-gradient(to top,transparent 2%,rgba(0,0,0,.13) 38%,rgba(0,0,0,.36) 72%,rgba(0,0,0,.52) 100%);
+  mask-image:linear-gradient(to top,transparent 2%,rgba(0,0,0,.13) 38%,rgba(0,0,0,.36) 72%,rgba(0,0,0,.52) 100%);
+  pointer-events:none;
+}
+
+/* ── الاسم ── */
+.hero__name{
+  position:relative;
+  margin:0;
+  font-family:var(--f-en);
+  font-weight:300;
+  font-size:clamp(26px,5.1vw,74px);
+  line-height:1.06;
+  letter-spacing:.3em;
+  text-indent:.3em;      /* تعويض تتبّع الحروف عشان يبقى في النص */
+  color:var(--white);
+  text-shadow:0 2px 60px rgba(1,5,11,.6);
+}
+
+.hero__role{
+  position:relative;
+  margin:clamp(16px,2.2vw,26px) 0 0;
+  font-family:var(--f-mono);
+  font-size:clamp(9px,.95vw,12px);
+  letter-spacing:.44em;
+  text-indent:.44em;
+  color:rgba(228,238,248,.78);
+  text-shadow:0 1px 18px rgba(1,5,11,.9);
+}
+
+/* ═══════════ حركات الدخول ═══════════ */
+[data-intro]{transition:opacity 1.4s var(--ease),transform 1.4s var(--ease)}
+[data-intro="1"]{transition-delay:.95s}
+[data-intro="2"]{transition-delay:1.25s}
+[data-intro="3"]{transition-delay:1.5s}
+body.is-loading [data-intro]{opacity:0;transform:translateY(20px)}
+/* اللوجو يطلع بلا إزاحة عشان ما تتعارض مع توسيطه */
+body.is-loading .hero__mark{transform:none}
+
+/* ═══════════ محرّك الظهور عند السكرول — جاهز لبقية الأقسام ═══════════
+   أي عنصر: data-reveal="up | clip | scale | blur | rule"
+   وللتأخير المتسلسل: style="--d:.2s"                                  */
+[data-reveal]{
+  transition:
+    opacity 1.05s var(--ease) var(--d,0s),
+    transform 1.05s var(--ease) var(--d,0s),
+    clip-path 1.15s var(--ease) var(--d,0s),
+    filter 1.05s var(--ease) var(--d,0s);
+}
+.js [data-reveal]     {opacity:0}
+.js [data-reveal="up"]   {transform:translateY(34px)}
+.js [data-reveal="scale"]{transform:scale(.94)}
+.js [data-reveal="blur"] {filter:blur(14px);transform:scale(1.02)}
+.js [data-reveal="clip"] {clip-path:inset(0 0 108% 0);transform:translateY(14px)}
+.js [data-reveal="rule"] {transform:scaleX(0)}
+/* clip-path يعزل الدمج (mix-blend-mode)، فنحطه على نوع clip فقط */
+.js [data-reveal].is-in       {opacity:1;transform:none;filter:none}
+.js [data-reveal="clip"].is-in{clip-path:inset(0 0 -20% 0)}
+
+/* ═══════════ الجوال ═══════════ */
+@media (max-width:820px){
+  /* الجوال نفس تصميم اللابتوب بالضبط: اللوجو والاسم في نص الشاشة،
+     والصورة تحتهم — مصغّر فقط، بدون أي إعادة ترتيب */
+  .hero__name{letter-spacing:.2em;text-indent:.2em}
+  .hero__role{letter-spacing:.34em;text-indent:.34em}
+}
+
+
+
+/* ═══════════ احترام تقليل الحركة ═══════════ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    transition-delay:0s !important;
+  }
+  .gate{display:none}
+  body.is-loading .grade__bloom{opacity:1;transform:none}
+  body.is-loading [data-intro]{opacity:1;transform:none}
+  body.is-loading .hero__mark{transform:none}
+  body.is-loading .hero__figure img{opacity:1}
+  [data-reveal]{opacity:1;transform:none;filter:none;clip-path:none}
+}
+
+/* وضع المعاينة ?ready — يعرض الصفحة بشكلها النهائي بدون حركة */
+body.is-instant *,
+body.is-instant *::before,
+body.is-instant *::after{
+  transition:none !important;
+  animation:none !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   الأقسام الداخلية — أفلام · مشروع · لقطات · الختام
+   ملاحظة: لا z-index هنا، عشان دمج صورة البطل يبقى شغّال.
+   ══════════════════════════════════════════════════════════════ */
+/* ── الحاوية: عرض الموقع على اللابتوب، مو ملء الشاشة ── */
+.shell{
+  position:relative;              /* لازم: بدونها طبقة التدريج ترسم فوق النص */
+  width:100%;
+  max-width:84rem;
+  margin-inline:auto;
+  padding-inline:clamp(20px,5vw,64px);
+}
+
+.sec{
+  position:relative;
+  padding:clamp(68px,9.5vh,124px) 0;
+}
+
+.sec__head{
+  text-align:center;
+  margin-bottom:clamp(32px,5vw,60px);
+}
+.sec__label{
+  margin:0 0 clamp(12px,1.6vw,18px);
+  font-family:var(--f-mono);
+  font-size:clamp(9px,.95vw,11px);
+  letter-spacing:.42em;
+  text-indent:.42em;
+  color:rgba(232,220,196,.72);
+}
+.sec__title{
+  margin:0;
+  font-family:var(--f-ar);
+  font-weight:300;
+  font-size:clamp(26px,4.2vw,54px);
+  line-height:1.3;
+  color:var(--white);
+}
+.sec__note{
+  margin:clamp(16px,2vw,22px) auto 0;
+  max-width:52ch;
+  font-size:clamp(13px,1.35vw,16px);
+  font-weight:200;
+  line-height:2;
+  color:var(--text-dim);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   صفحة العمل: بنر ← معلومات ← العمل
+   ══════════════════════════════════════════════════════════════ */
+.case{position:relative}
+
+.case__banner{
+  position:relative;overflow:hidden;
+  width:100%;            /* لازم: بدونه القيد على الطول يقلّص العرض والبنر يزيح لجهة */
+  aspect-ratio:2.35/1;
+  max-height:76svh;
+  background:rgba(196,222,244,.04);
+}
+.case__banner img{
+  width:100%;height:100%;object-fit:cover;
+  filter:saturate(.92);
+}
+
+.back{
+  display:inline-block;
+  margin-top:clamp(22px,3vw,38px);
+  font-size:clamp(12px,1.25vw,14px);
+  font-weight:300;
+  color:var(--text-dim);
+  transition:color .35s var(--ease);
+}
+.back__text{vertical-align:middle}
+.back:hover{color:var(--ice-100)}
+.back__arrow{
+  display:inline-block;vertical-align:middle;
+  width:9px;height:9px;
+  margin-inline-end:.7em;
+  border-left:1px solid currentColor;border-bottom:1px solid currentColor;
+  transform:rotate(-135deg);
+  transition:transform .35s var(--ease);
+}
+.back:hover .back__arrow{transform:rotate(-135deg) translate(2px,-2px)}
+
+.case__head{
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
+  gap:clamp(16px,2.4vw,40px);
+  padding:clamp(22px,2.8vw,34px) 0 clamp(22px,2.8vw,34px);
+  margin-bottom:clamp(24px,3vw,40px);
+  border-bottom:1px solid rgba(232,220,196,.14);
+}
+.case__lead{max-width:56ch}
+.case__title{
+  margin:0;
+  font-family:var(--f-ar);font-weight:300;
+  font-size:clamp(28px,4.4vw,58px);
+  line-height:1.2;
+  color:var(--white);
+}
+.case__kind{
+  margin:clamp(8px,1vw,12px) 0 0;
+  font-size:clamp(12px,1.3vw,15px);font-weight:200;
+  color:var(--text-dim);
+}
+.case__note{
+  margin:clamp(14px,1.8vw,20px) 0 0;
+  font-size:clamp(13px,1.35vw,16px);font-weight:200;
+  line-height:2;
+  color:var(--text-dim);
+}
+
+.case__meta{display:flex;gap:clamp(26px,3.2vw,52px);margin:0}
+.case__meta dt{
+  margin:0 0 6px;
+  font-size:clamp(10px,1vw,12px);font-weight:200;
+  color:rgba(232,220,196,.62);
+}
+.case__meta dd{
+  margin:0;
+  font-family:var(--f-mono);
+  font-size:clamp(12px,1.2vw,14px);letter-spacing:.06em;
+  color:var(--ice-200);
+}
+
+.case__film{background:#000}
+.case__film video{display:block;width:100%;height:auto;background:#000}
+
+/* معرض صور العمل */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(230px,44vw),1fr));
+  gap:clamp(8px,1vw,14px);
+}
+.gallery .shot{
+  width:100%;height:auto;
+  aspect-ratio:var(--ar,3/2);
+  cursor:pointer;
+}
+
+/* العمل التالي */
+.nextwork{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+  margin-top:clamp(46px,6vw,84px);
+  padding-top:clamp(22px,2.8vw,34px);
+  border-top:1px solid rgba(232,220,196,.14);
+  color:inherit;
+}
+.nextwork__label{
+  font-size:clamp(11px,1.15vw,13px);font-weight:200;
+  color:rgba(232,220,196,.62);
+}
+.nextwork__title{
+  font-family:var(--f-ar);font-weight:300;
+  font-size:clamp(20px,2.6vw,34px);
+  color:var(--ice-100);
+  transition:color .35s var(--ease);
+}
+.nextwork:hover .nextwork__title{color:var(--white)}
+
+/* ── حاوية الشريط + أزرار التنقل ── */
+.rail{position:relative}
+
+.rail__btn{
+  position:absolute;top:calc(50% - clamp(14px,1.6vw,22px));
+  z-index:3;
+  width:clamp(38px,3.4vw,50px);height:clamp(38px,3.4vw,50px);
+  transform:translateY(-50%);
+  border:1px solid rgba(232,220,196,.22);
+  border-radius:50%;
+  background:rgba(1,5,11,.42);
+  backdrop-filter:blur(6px);
+  cursor:pointer;
+  transition:background .35s var(--ease),border-color .35s var(--ease),opacity .35s var(--ease);
+}
+.rail__btn:hover{background:rgba(1,5,11,.72);border-color:rgba(232,220,196,.55)}
+.rail__btn::before{
+  content:"";position:absolute;inset:0;margin:auto;
+  width:9px;height:9px;
+  border-left:1px solid var(--ice-100);border-bottom:1px solid var(--ice-100);
+}
+.rail__btn--prev{right:clamp(10px,1.6vw,26px)}
+.rail__btn--next{left:clamp(10px,1.6vw,26px)}
+.rail__btn--prev::before{transform:translateX(2px) rotate(-135deg)}
+.rail__btn--next::before{transform:translateX(-2px) rotate(45deg)}
+
+/* ── الشريط الأفقي: يمشي لحاله، وتقدر تسحبه يمين وشمال ── */
+.strip{
+  display:flex;
+  gap:clamp(10px,1.3vw,22px);
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  direction:ltr;                  /* عشان يبدأ من أول عنصر ويمشي صح */
+  padding-inline:clamp(20px,5vw,64px);
+  scrollbar-width:none;
+  cursor:grab;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 5%,#000 95%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0,#000 5%,#000 95%,transparent 100%);
+}
+.strip::-webkit-scrollbar{display:none}
+.strip.is-drag{cursor:grabbing}
+.strip.is-drag *{pointer-events:none}
+
+/* ══════════════════════════════════════════════════════════════
+   نبذة عني — الصورة يمين، والنص (عربي ثم إنجليزي) يسار
+   ══════════════════════════════════════════════════════════════ */
+.about__grid{
+  display:grid;
+  grid-template-columns:minmax(220px,32%) 1fr;
+  gap:clamp(26px,4.5vw,76px);
+  align-items:center;
+}
+
+/* بدون أي حركة على الصورة ولا على غلافها:
+   أي opacity أو transform يعزل دمج screen فتطلع خلفية سوداء،
+   ولو تعطّل محرّك الظهور تختفي الصورة أصلاً. فتبقى ظاهرة دائمًا. */
+.about__figure{position:relative}
+.about__figure img{
+  width:100%;height:auto;
+  /* نفس معالجة الصفحة الأولى: الأسود يذوب في التدريج */
+  mix-blend-mode:screen;
+  filter:grayscale(1) contrast(1.05) brightness(.98);
+  -webkit-mask-image:linear-gradient(to top,transparent 0%,rgba(0,0,0,.45) 9%,#000 24%);
+  mask-image:linear-gradient(to top,transparent 0%,rgba(0,0,0,.45) 9%,#000 24%);
+}
+
+.about__title{
+  margin:0 0 clamp(18px,2.4vw,28px);
+  font-family:var(--f-ar);font-weight:300;
+  font-size:clamp(24px,3.6vw,46px);
+  line-height:1.3;
+  color:var(--white);
+}
+.about__sub{
+  margin:0 0 clamp(12px,1.6vw,18px);
+  font-family:var(--f-ar);font-weight:300;
+  font-size:clamp(17px,2.2vw,27px);
+  color:var(--white);
+}
+.about__ar{
+  margin:0;
+  font-size:clamp(14px,1.45vw,17px);
+  font-weight:200;
+  line-height:2.15;
+  color:var(--ice-200);
+  max-width:62ch;
+}
+.about__rule{
+  display:block;
+  width:min(240px,70%);height:1px;
+  margin:clamp(26px,3.4vw,44px) 0;
+  transform-origin:right;
+  background:linear-gradient(to left,rgba(232,220,196,.4),transparent);
+}
+
+@media (max-width:820px){
+  /* نفس تقسيم اللابتوب: الصورة يمين والنص يسار — مصغّر فقط */
+  .about__grid{
+    grid-template-columns:minmax(104px,34%) 1fr;
+    gap:clamp(14px,4vw,26px);
+  }
+  .about__ar{font-size:clamp(12.5px,3.4vw,15px);line-height:2}
+  .about__rule{width:70%}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   الكاروسيل المتداخل — منقول كما هو من m7mdbedeiry.com
+   (نفس المسافات والدوران والتكبير) والبطاقة هنا بنسبة الفلم 2.35:1
+   ══════════════════════════════════════════════════════════════ */
+#works{overflow:hidden}   /* البطاقات الجانبية تمتد برا الشاشة */
+
+.stage{
+  position:relative;
+  height:clamp(190px,32vh,330px);
+  margin-top:clamp(20px,4vh,44px);
+  perspective:1400px;
+  touch-action:pan-y;          /* السحب الأفقي لنا، والعمودي يبقى للصفحة */
+  cursor:grab;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.stage:active{cursor:grabbing}
+
+.stage__card{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:var(--card-w,480px);
+  aspect-ratio:2.35 / 1;
+  margin-left:calc(var(--card-w,480px) / -2);
+  transform:translateY(-50%);
+  cursor:pointer;
+  transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .4s ease;
+}
+
+.stage__inner{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#111;
+  box-shadow:0 18px 60px rgba(1,5,11,.55);
+  transition:transform .35s ease;
+}
+
+.stage__inner video,
+.stage__inner img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  -webkit-user-drag:none;
+  pointer-events:none;         /* السحب يبدأ من البطاقة مو من الصورة */
+}
+
+.stage__card:hover .stage__inner{transform:scale(1.05)}
+
+/* أسهم التنقل يمين ويسار */
+.nav-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:80;
+  width:clamp(44px,5vw,58px);
+  height:clamp(44px,5vw,58px);
+  border-radius:50%;
+  border:1px solid rgba(232,220,196,.24);
+  background:rgba(1,5,11,.72);
+  backdrop-filter:blur(6px);
+  color:var(--ice-100);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background .25s ease,color .25s ease,border-color .25s ease;
+}
+
+.nav-arrow svg{width:42%;height:42%}
+
+.nav-arrow:hover{background:var(--ice-100);color:var(--navy-950);border-color:var(--ice-100)}
+
+.nav-arrow--right{right:clamp(10px,2vw,28px)}
+.nav-arrow--left {left: clamp(10px,2vw,28px)}
+
+/* اسم العمل تحت الكاروسيل */
+.stage__caption{
+  display:flex;align-items:baseline;justify-content:center;
+  gap:clamp(10px,1.2vw,16px);
+  margin:clamp(22px,2.8vw,36px) 0 0;
+  min-height:1.6em;
+  text-align:center;
+}
+.stage__title{
+  font-family:var(--f-ar);font-weight:300;
+  font-size:clamp(17px,2vw,26px);
+  color:var(--white);
+}
+.stage__kind{
+  font-size:clamp(11px,1.15vw,14px);font-weight:200;
+  color:var(--text-dim);
+}
+
+/* ── لقطة داخل الشريط ── */
+.shot{
+  flex:0 0 auto;
+  height:clamp(180px,27svh,320px);
+  aspect-ratio:var(--ar,3/2);
+  margin:0;padding:0;border:0;background:rgba(196,222,244,.04);
+  overflow:hidden;cursor:pointer;
+}
+.shot img{
+  width:100%;height:100%;object-fit:cover;
+  filter:saturate(.9);
+  transition:transform 1.1s var(--ease),filter .5s var(--ease);
+}
+.shot:hover img,.shot:focus-visible img{transform:scale(1.05);filter:saturate(1)}
+
+/* ── الختام ── */
+.end{
+  position:relative;
+  padding:clamp(90px,14vh,170px) var(--pad) clamp(70px,10vh,120px);
+  text-align:center;
+}
+.end__mark{
+  width:clamp(150px,17vw,250px);height:auto;margin:0 auto;
+  opacity:.62;
+}
+.end__role{
+  margin:clamp(26px,3.4vw,40px) 0 0;
+  font-family:var(--f-ar);font-weight:300;
+  font-size:clamp(17px,2.1vw,26px);
+  color:var(--white);
+}
+.end__meta{
+  margin:clamp(10px,1.2vw,14px) 0 0;
+  font-size:clamp(12px,1.3vw,15px);
+  font-weight:200;
+  color:var(--text-dim);
+}
+.end__meta i{margin:0 .5em;font-style:normal;color:rgba(232,220,196,.6)}
+
+/* ── عارض الصور والفيديو ── */
+.lb{
+  position:fixed;inset:0;z-index:200;
+  display:grid;place-items:center;
+  padding:clamp(46px,7vh,90px) clamp(46px,7vw,110px);
+  background:rgba(1,5,11,.95);
+  animation:lbIn .35s var(--ease);
+}
+.lb[hidden]{display:none}
+@keyframes lbIn{from{opacity:0}to{opacity:1}}
+
+.lb__stage{display:grid;place-items:center;width:100%;height:100%}
+.lb__stage img,
+.lb__stage video{
+  max-width:100%;max-height:100%;
+  width:auto;height:auto;
+  object-fit:contain;
+  animation:lbPop .5s var(--ease);
+}
+@keyframes lbPop{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+
+.lb__close,.lb__nav{
+  position:absolute;z-index:2;
+  width:44px;height:44px;
+  border:0;background:none;cursor:pointer;
+  opacity:.6;transition:opacity .3s var(--ease);
+}
+.lb__close:hover,.lb__nav:hover{opacity:1}
+.lb__close{top:clamp(10px,2vh,24px);right:clamp(10px,2vw,26px)}
+.lb__close::before,.lb__close::after{
+  content:"";position:absolute;inset:0;margin:auto;
+  width:20px;height:1px;background:#fff;
+}
+.lb__close::before{transform:rotate(45deg)}
+.lb__close::after{transform:rotate(-45deg)}
+
+.lb__nav{top:50%;transform:translateY(-50%)}
+.lb__nav--prev{left:clamp(6px,1.4vw,20px)}
+.lb__nav--next{right:clamp(6px,1.4vw,20px)}
+.lb__nav::before{
+  content:"";position:absolute;inset:0;margin:auto;
+  width:13px;height:13px;
+  border-left:1px solid #fff;border-bottom:1px solid #fff;
+}
+.lb__nav--prev::before{transform:rotate(45deg)}
+.lb__nav--next::before{transform:rotate(-135deg)}
+
+/* ── الجوال: نفس التصميم بالضبط، بمقاسات أصغر ── */
+@media (max-width:820px){
+  .shot{height:clamp(160px,24svh,240px)}
+  .card__frame{height:clamp(130px,20svh,190px)}
+  .strip{gap:10px}
+}
+
+

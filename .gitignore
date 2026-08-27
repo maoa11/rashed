@@ -1,0 +1,15 @@
+# مصادر العميل الأصلية (1.8 جيجا) — الموقع يستخدم النسخ المحوّلة في assets/media
+اعمالي/
+
+# نسخة أصلية ضخمة وغير مستخدمة في الموقع
+assets/img/portrait-cutout-original.png
+
+# ملفات معاينة مؤقتة
+_pv.html
+_t*.html
+_seam.html
+_d*.html
+
+# ملفات النظام
+Thumbs.db
+.DS_Store
