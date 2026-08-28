@@ -224,10 +224,21 @@ body.is-loading .hero__mark{transform:none}
 
 /* ═══════════ الجوال ═══════════ */
 @media (max-width:820px){
-  /* الجوال نفس تصميم اللابتوب بالضبط: اللوجو والاسم في نص الشاشة،
-     والصورة تحتهم — مصغّر فقط، بدون أي إعادة ترتيب */
+  /* نفس تركيب اللابتوب: اللوجو خلف الشخصين والاسم فوقهم متداخلين.
+     الشاشة الطويلة ما تسمح بتكبير الصورة (تطيح وجوه الطرفين برا الكادر)،
+     فنوسّط المجموعة كلها عمودياً بدل ما تنحشر تحت. */
+  .hero{padding:var(--pad)}
+  .hero__figure{
+    inset:50% 0 auto 0;
+    translate:0 -42%;      /* نفس نسبة اللابتوب: الاسم يقطع الصورة عند 42% */
+  }
   .hero__name{letter-spacing:.2em;text-indent:.2em}
   .hero__role{letter-spacing:.34em;text-indent:.34em}
+
+  /* مسافات أقل بين الأقسام على الجوال */
+  .sec{padding:clamp(44px,7vh,80px) 0}
+  .end{padding:clamp(54px,8vh,90px) var(--pad) clamp(40px,6vh,70px)}
+  .sec__head{margin-bottom:clamp(20px,4vw,34px)}
 }
 
 
