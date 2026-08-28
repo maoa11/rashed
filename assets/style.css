@@ -34,6 +34,7 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;
+  min-height:100vh;   /* بديل لسفاري القديم */
   min-height:100svh;
   background:var(--bg);
   color:var(--text);
@@ -110,6 +111,7 @@ body.is-loading .gate__panel--bottom{transform:none}
    يشوف التدريج اللي تحته ويندمج معه. */
 .hero{
   position:relative;
+  height:100vh;      /* بديل: بدونه سفاري القديم يسقط السطر ويطيح التصميم */
   height:100svh;
   min-height:520px;
   display:grid;
@@ -120,12 +122,12 @@ body.is-loading .gate__panel--bottom{transform:none}
 }
 
 /* الصورة: بعرض الشاشة كامل وبنسبتها الأصلية، ملزوقة بالأسفل.
-   دمج screen يخلي الأسود شفاف، فتصير الصورة والتدريج شي واحد
-   بدون أي حد أو قص ظاهر. */
-/* بدون z-index / transform / clip-path على هذي الطبقة:
-   أي واحد منهم يعزل الدمج ويرجع الأسود أسود. */
+   الصورة نفسها شفافيتها = إضاءتها (hero-lum.png)، فالأسود يختفي
+   وتندمج مع التدريج بدون mix-blend-mode — لأن الدمج ما يشتغل
+   فوق خلفية ثابتة في سفاري الآيفون فتطلع الخلفية سوداء. */
 .hero__figure{
   position:absolute;inset:auto 0 0 0;
+  height:min(56.25vw,100vh);
   height:min(56.25vw,100svh);
   pointer-events:none;
 }
@@ -133,8 +135,6 @@ body.is-loading .gate__panel--bottom{transform:none}
 .hero__figure img{
   width:100%;height:100%;
   object-fit:cover;object-position:center bottom;
-  mix-blend-mode:screen;
-  filter:grayscale(1) contrast(1.06) brightness(.96);
   /* الجسم يتلاشى من تحت للشفافية — يذوب في نفس الخلفية،
      فما يبان قطع ولا خط فاصل بين الصفحة والقسم اللي بعدها */
   -webkit-mask-image:linear-gradient(to top,
@@ -312,6 +312,7 @@ body.is-instant *::after{
   position:relative;overflow:hidden;
   width:100%;            /* لازم: بدونه القيد على الطول يقلّص العرض والبنر يزيح لجهة */
   aspect-ratio:2.35/1;
+  max-height:76vh;
   max-height:76svh;
   background:rgba(196,222,244,.04);
 }
@@ -475,9 +476,7 @@ body.is-instant *::after{
 .about__figure{position:relative}
 .about__figure img{
   width:100%;height:auto;
-  /* نفس معالجة الصفحة الأولى: الأسود يذوب في التدريج */
-  mix-blend-mode:screen;
-  filter:grayscale(1) contrast(1.05) brightness(.98);
+  /* نفس معالجة الصفحة الأولى: شفافية الصورة من إضاءتها، بدون blend */
   -webkit-mask-image:linear-gradient(to top,transparent 0%,rgba(0,0,0,.45) 9%,#000 24%);
   mask-image:linear-gradient(to top,transparent 0%,rgba(0,0,0,.45) 9%,#000 24%);
 }
@@ -620,6 +619,7 @@ body.is-instant *::after{
 /* ── لقطة داخل الشريط ── */
 .shot{
   flex:0 0 auto;
+  height:clamp(180px,27vh,320px);
   height:clamp(180px,27svh,320px);
   aspect-ratio:var(--ar,3/2);
   margin:0;padding:0;border:0;background:rgba(196,222,244,.04);
@@ -705,8 +705,7 @@ body.is-instant *::after{
 
 /* ── الجوال: نفس التصميم بالضبط، بمقاسات أصغر ── */
 @media (max-width:820px){
-  .shot{height:clamp(160px,24svh,240px)}
-  .card__frame{height:clamp(130px,20svh,190px)}
+  .shot{height:clamp(160px,24vh,240px);height:clamp(160px,24svh,240px)}
   .strip{gap:10px}
 }
 
